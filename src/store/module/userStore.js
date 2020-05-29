@@ -1,13 +1,18 @@
 import axios from 'axios';
 
-export default {
-    state: {
+const defaultState = () => {
+    return {
         username: '',
         password: '',
         token: '',
         firstName: '',
         lastName: ''
-    },
+    }
+
+};
+
+export default {
+    state: defaultState(),
     mutations: {
         SET_CREDENTIALS: (state, [username, password, token]) => {
             state.username = username;
@@ -17,6 +22,9 @@ export default {
         SET_PROFILE: (state, [firstName, lastName]) => {
             state.firstName = firstName;
             state.lastName = lastName;
+        },
+        RESET: (state) => {
+            Object.assign(state, defaultState())
         }
     },
     getters: {
@@ -31,6 +39,9 @@ export default {
     actions: {
         /**
          * Authentication method
+         * 
+         * @param { Object } context 
+         * @param { Array } credentials 
          */
         async auth(context, [username, password]) {
             // Authenticating
@@ -73,6 +84,19 @@ export default {
             return {
                 status: true
             };
+        },
+
+        /**
+         * Deauthentication method (logout)
+         * Note: This will reset to default state
+         * 
+         * @param { Object } context 
+         */
+        deauth(context) {
+            console.log('[UserStore] Deauthentication triggered. Clearing state...')
+
+            // Commit state
+            context.commit('RESET');
         }
     },
 
