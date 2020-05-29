@@ -28,15 +28,28 @@
     <v-content>
       <router-view />
     </v-content>
+
+    <v-footer app>
+      <div v-if="isLogged">
+        Connecté en tant que
+        {{ profile.firstName + ' ' + profile.lastName }}
+      </div>
+    </v-footer>
   </v-app>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   data: () => {
     return {
       drawer: false
     }
+  },
+  computed: {
+    ...mapGetters(['isLogged']),
+    ...mapGetters(['profile'])
   }
 }
 </script>
