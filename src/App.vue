@@ -5,7 +5,7 @@
       app
       clipped
     >
-      <v-list dense>
+      <v-list rounded>
         <v-list-item link>
           <v-list-item-action>
             <v-icon>mdi-view-dashboard</v-icon>
@@ -16,7 +16,7 @@
         </v-list-item>
         <v-list-item link>
           <v-list-item-action>
-            <v-icon>mdi-settings</v-icon>
+            <v-icon>mdi-cog</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Settings</v-list-item-title>
@@ -38,3 +38,13 @@
     </v-content>
   </v-app>
 </template>
+
+<script>
+export default {
+  data: () => {
+    return {
+      drawer: false
+    }
+  }
+}
+</script>
