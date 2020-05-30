@@ -1,40 +1,83 @@
 import axios from 'axios';
 
+// Default state
 const defaultState = () => {
     return {
-        username: '',
-        password: '',
-        token: '',
-        firstName: '',
-        lastName: ''
+        profile: {
+            'firstName': '',
+            'lastName': '',
+            'email': '',
+            'typeCompte': '',
+            'photoUrl': '',
+            'classeCode': '',
+            'classeLibelle': ''
+        },
+        school: {
+            nomEtablissement: '',
+            anneeScolaireCourante: '',
+            codeOgec: ''
+        },
+        credentials: {
+            username: '',
+            password: '',
+            token: ''
+        }
+    }
+};
+
+/**
+ * Assign array values to a object while keeping keys
+ * 
+ * @param { Array } array 
+ * @param { Object } target 
+ * @returns { Object }
+ */
+const assign = (array, target) => {
+    // Create temporary object
+    let newState = {};
+
+    // Mix values
+    for (var i = 0; i < array.length; i++) {
+        newState[Object.keys(target)[i]] = array[i];
     }
 
-};
+    // Return created object
+    return newState;
+}
 
 export default {
     state: defaultState(),
     mutations: {
-        SET_CREDENTIALS: (state, [username, password, token]) => {
-            state.username = username;
-            state.password = password;
-            state.token = token;
+        SET_CREDENTIALS: (state, params = [username, password, token]) => {
+            state.credentials = assign(params, state.credentials);
         },
-        SET_PROFILE: (state, [firstName, lastName]) => {
-            state.firstName = firstName;
-            state.lastName = lastName;
+        SET_PROFILE: (state, params = [
+            firstName,
+            lastName,
+            email,
+            typeCompte,
+            photoUrl,
+            classeCode,
+            classeLibelle
+        ]) => {
+            state.profile = assign(params, state.profile);
+        },
+        SET_SCHOOL: (state, params = [
+            nomEtablissement,
+            anneeScolaireCourante,
+            codeOgec
+        ]) => {
+            state.school = assign(params, state.school);
         },
         RESET: (state) => {
-            Object.assign(state, defaultState())
+            // Auto-assignment
+            Object.assign(state, defaultState());
         }
     },
     getters: {
-        profile: state => {
-            return {
-                'firstName': state.firstName,
-                'lastName': state.lastName
-            }
-        },
-        isLogged: state => (state.username != "" || state.password != "")
+        profile: state => state.profile,
+        school: state => state.school,
+        isLogged: state => (state.credentials.username != "" || state.credentials.password != "")
     },
     actions: {
         /**
@@ -75,11 +118,26 @@ export default {
                 response.data.token
             ]);
 
-            // Storing profil data
+            // Get profile
+            const account = response.data.data.accounts[0];
+
+            // Storing profile data
             context.commit('SET_PROFILE', [
-                response.data.data.accounts[0].prenom,
-                response.data.data.accounts[0].nom
+                account.prenom,
+                account.nom,
+                account.email,
+                account.typeCompte,
+                account.profile.photo,
+                account.profile.classe.code,
+                account.profile.classe.libelle
             ]);
+
+            // Store school-based data
+            context.commit('SET_SCHOOL', [
+                account.nomEtablissement,
+                account.anneeScolaireCourante,
+                account.codeOgec
+            ])
 
             return {
                 status: true
