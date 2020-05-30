@@ -35,13 +35,15 @@ router.beforeEach((to, from, next) => {
   if (to.name === 'Authentication' && store.getters.isLogged) {
     console.log('[Router] Already logged, forcing Dashboard.');
     next({ name: 'Dashboard' });
+    return;
   }
 
   // Redirect to authentication page if not logged
   if (to.name !== 'Authentication' && !store.getters.isLogged) {
     next({ name: 'Authentication' });
+    return;
   }
-    
+
   // Allow continue
   next();
 })
