@@ -46,7 +46,7 @@ const assign = (array, target) => {
 }
 
 export default {
-    state: defaultState(),
+    state: state,
     mutations: {
         SET_CREDENTIALS: (state, params = [username, password, token]) => {
             state.credentials = assign(params, state.credentials);
