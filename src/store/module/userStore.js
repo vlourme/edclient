@@ -20,6 +20,7 @@ const defaultState = () => {
         credentials: {
             username: '',
             password: '',
+            id: '',
             token: ''
         }
     }
@@ -49,25 +50,30 @@ const assign = (array, target) => {
 export default {
     state: state,
     mutations: {
-        SET_CREDENTIALS: (state, params = [username, password, token]) => {
+        SET_CREDENTIALS: (state, params = {
+            username: '',
+            password: '',
+            id: '',
+            token: ''
+        }) => {
             state.credentials = assign(params, state.credentials);
         },
-        SET_PROFILE: (state, params = [
-            firstName,
-            lastName,
-            email,
-            typeCompte,
-            photoUrl,
-            classeCode,
-            classeLibelle
-        ]) => {
+        SET_PROFILE: (state, params = {
+            firstName: '',
+            lastName: '',
+            email: '',
+            typeCompte: '',
+            photoUrl: '',
+            classeCode: '',
+            classeLibelle: ''
+        }) => {
             state.profile = assign(params, state.profile);
         },
-        SET_SCHOOL: (state, params = [
-            nomEtablissement,
-            anneeScolaireCourante,
-            codeOgec
-        ]) => {
+        SET_SCHOOL: (state, params = {
+            nomEtablissement: '',
+            anneeScolaireCourante: '',
+            codeOgec: ''
+        }) => {
             state.school = assign(params, state.school);
         },
         RESET: (state) => {
@@ -112,15 +118,16 @@ export default {
 
             console.log('[Login] Authentication success.');
 
+            // Get profile
+            const account = response.data.data.accounts[0];
+
             // Store credentials
             context.commit('SET_CREDENTIALS', [
                 username,
                 password,
+                account.id,
                 response.data.token
             ]);
-
-            // Get profile
-            const account = response.data.data.accounts[0];
 
             // Storing profile data
             context.commit('SET_PROFILE', [
