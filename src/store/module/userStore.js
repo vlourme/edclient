@@ -24,6 +24,7 @@ const defaultState = () => {
         }
     }
 };
+const state = defaultState();
 
 /**
  * Assign array values to a object while keeping keys
